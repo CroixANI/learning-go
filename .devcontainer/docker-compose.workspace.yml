@@ -1,0 +1,29 @@
+version: '3.8'
+
+name: learning-go-project
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: learning-go-workspace
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_AUTH_BASE=${MONGO_AUTH_BASE}
+    depends_on:
+      - mongodb
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    ports:
+      - '8080:8080'
+
+  mongodb:
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: learning-go
